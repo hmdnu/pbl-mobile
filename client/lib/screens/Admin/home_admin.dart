@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomeAdmin extends StatelessWidget {
+  const HomeAdmin({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +21,8 @@ class HomeScreen extends StatelessWidget {
             Card(
               child: ListTile(
                 leading: const Icon(Icons.description),
-                title: const Text('Menu Surat Ijin'),
-                subtitle: const Text('Membuat dan mengelola surat ijin'),
+                title: const Text('Menu Surat Izin'),
+                subtitle: const Text('Membuat dan mengelola surat izin'),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () => context.push('/surat-ijin'),
               ),
