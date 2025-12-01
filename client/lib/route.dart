@@ -30,6 +30,11 @@ final GoRouter router = GoRouter(
               path: "/admin",
               builder: (context, state) => const AdminScreen(),
             ),
+          ],
+        ),
+
+        StatefulShellBranch(
+          routes: [
             GoRoute(
               path: "/admin/employee",
               builder: (context, state) => const EmployeeScreen(),
