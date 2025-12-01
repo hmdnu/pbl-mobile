@@ -16,36 +16,40 @@ class ProfileScreen extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.fromLTRB(24, 60, 24, 24),
               decoration: const BoxDecoration(
-                color: Color(0xff1e9ce6), // Warna biru seperti gambar
+                color: Color(0xFF22A9D6), // Warna biru seperti gambar
               ),
-              child: Column(
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundColor: Colors.white,
-                    child: Icon(Icons.person, size: 40, color: Colors.grey),
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        "Informasi Profil",
+                        style: TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        "Data diri pegawai",
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.white70,
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 16),
 
-                  // Judul
-                  Text(
-                    "Informasi Profil",
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
+                  const Spacer(), // mendorong logo ke kanan
 
-                  SizedBox(height: 4),
-
-                  Text(
-                    "Data diri pegawai",
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.white70,
-                    ),
+                  // ============ LOGO DI KANAN ============
+                  Image.asset(
+                    'assets/logoPbl.png',
+                    width: 50,
+                    height: 50,
                   ),
                 ],
               ),
@@ -78,7 +82,7 @@ class ProfileScreen extends StatelessWidget {
                   _ProfileField(
                     title: "Jatah Cuti",
                     value: "4",
-                    color: Color(0xfffde9b0),
+                    color: Color(0x66D79A20),
                   ),
 
                   SizedBox(height: 20),
@@ -95,7 +99,7 @@ class ProfileScreen extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: const Color(0xFF4CB050),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
                     ),
