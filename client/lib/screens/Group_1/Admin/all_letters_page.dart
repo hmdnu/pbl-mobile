@@ -5,10 +5,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:client/utils/constant.dart';
 
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/MiniGroup-1
 class AllLettersPage extends StatefulWidget {
   final List<dynamic> letters;
 
@@ -37,12 +33,7 @@ class _AllLettersPageState extends State<AllLettersPage> {
   ];
 
   Future<void> exportToExcel() async {
-    String baseUrl =
-<<<<<<< HEAD
-        "https://collene-eternal-luba.ngrok-free.dev/api/export-approved-letters";
-=======
-        "${Constant.apiUrl}/export-approved-letters";
->>>>>>> origin/MiniGroup-1
+    String baseUrl = "${Constant.apiUrl}/export-approved-letters";
 
     String url = selectedMonth != null
         ? "$baseUrl?month=$selectedMonth"
@@ -379,8 +370,4 @@ class _AllLettersPageState extends State<AllLettersPage> {
       },
     );
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> origin/MiniGroup-1

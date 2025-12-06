@@ -15,13 +15,6 @@ class IzinDashboardController extends Controller
 {
     public function __invoke(Request $request)
     {
-<<<<<<< HEAD
-        // Perhitungan dashboard tetap sama
-        $employeesWithLetters = DB::table('letters')->distinct('employee_id')->count('employee_id');
-        $totalEmployees = DB::table('employees')->count();
-        $totalLettersApproved = DB::table('letters')->where('status', 1)->count();
-        $totalLetters = DB::table('letters')->count();
-=======
         try {
             // Hitung data utama dashboard
             $employeesWithLetters = DB::table('letters')->distinct('employee_id')->count('employee_id');
@@ -58,138 +51,11 @@ class IzinDashboardController extends Controller
                 ->leftJoin('departments', 'departments.id', '=', 'employees.department_id')
                 ->leftJoin('letter_formats', 'letter_formats.id', '=', 'letters.letter_format_id')
                 ->where('letters.status', 1);
->>>>>>> origin/MiniGroup-1
 
             if ($month >= 1 && $month <= 12) {
                 $lettersQuery->whereMonth('letters.request_date', $month);
             }
 
-<<<<<<< HEAD
-        // Filter bulan
-        $month = (int) $request->query('month', 0);
-
-        $lettersQuery = DB::table('letters')
-            ->join('employees', 'employees.id', '=', 'letters.employee_id')
-            ->leftJoin('departments', 'departments.id', '=', 'employees.department_id')
-            ->leftJoin('letter_formats', 'letter_formats.id', '=', 'letters.letter_format_id')
-            ->where('letters.status', 1);
-
-        if ($month >= 1 && $month <= 12) {
-            $lettersQuery->whereMonth('letters.request_date', $month);
-        }
-
-        $allLetters = $lettersQuery
-            ->select(
-                'employees.id as employee_id',
-                DB::raw("CONCAT(employees.first_name, ' ', employees.last_name) AS employee_name"),
-                'departments.name as department_name',
-                DB::raw("COUNT(letters.id) as total_approved_letters"),
-                DB::raw("GROUP_CONCAT(letter_formats.name SEPARATOR ', ') as cuti_list"),
-                DB::raw("GROUP_CONCAT(letters.request_date ORDER BY letters.request_date SEPARATOR ',') as cuti_dates")
-            )
-            ->groupBy(
-                'employees.id',
-                'employees.first_name',
-                'employees.last_name',
-                'departments.name'
-            )
-            ->orderBy('employee_name', 'ASC')
-            ->get();
-
-        return response()->json([
-            'total_employees_with_letters' => $employeesWithLetters,
-            'total_employees' => $totalEmployees,
-            'total_letters_approved' => $totalLettersApproved,
-            'total_letters' => $totalLetters,
-            'departments' => $departments,
-            'all_letters' => $allLetters,
-        ]);
-    }
-
-
-    public function exportApprovedLetters(Request $request)
-    {
-        $month = (int) $request->query('month', 0);
-
-        $query = DB::table('letters')
-            ->join('employees', 'employees.id', '=', 'letters.employee_id')
-            ->leftJoin('departments', 'departments.id', '=', 'employees.department_id')
-            ->leftJoin('letter_formats', 'letter_formats.id', '=', 'letters.letter_format_id')
-            ->where('letters.status', 1);
-
-        if ($month >= 1 && $month <= 12) {
-            $query->whereMonth('letters.request_date', $month);
-        }
-
-        $data = $query
-            ->select(
-                DB::raw("CONCAT(employees.first_name, ' ', employees.last_name) AS employee_name"),
-                'departments.name as department_name',
-                DB::raw("COUNT(letters.id) as total_approved_letters"),
-                DB::raw("GROUP_CONCAT(letter_formats.name ORDER BY letter_formats.name SEPARATOR ',') as cuti_list"),
-                DB::raw("GROUP_CONCAT(letters.request_date ORDER BY letters.request_date SEPARATOR ',') as cuti_dates")
-            )
-            ->groupBy(
-                'employees.id',
-                'employees.first_name',
-                'employees.last_name',
-                'departments.name'
-            )
-            ->orderBy('employee_name', 'ASC')
-            ->get();
-
-        // EXCEL
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-
-        $sheet->setCellValue('A1', 'Nama Karyawan');
-        $sheet->setCellValue('B1', 'Departemen');
-        $sheet->setCellValue('C1', 'Total Cuti Disetujui');
-        $sheet->setCellValue('D1', 'Jenis Cuti + Tanggal');
-
-        $sheet->getStyle('A1:D1')->applyFromArray([
-            'font' => ['bold' => true],
-            'fill' => [
-                'fillType' => Fill::FILL_SOLID,
-                'startColor' => ['rgb' => 'DDDDDD']
-            ],
-            'borders' => [
-                'allBorders' => ['borderStyle' => Border::BORDER_THIN]
-            ]
-        ]);
-
-        $row = 2;
-        foreach ($data as $item) {
-
-            $cutiList = explode(',', $item->cuti_list);
-            $cutiDates = explode(',', $item->cuti_dates);
-
-            $combined = [];
-            foreach ($cutiList as $index => $cutiName) {
-                $date = $cutiDates[$index] ?? '-';
-                $combined[] = "{$cutiName} ({$date})";
-            }
-
-            $sheet->setCellValue("A{$row}", $item->employee_name);
-            $sheet->setCellValue("B{$row}", $item->department_name);
-            $sheet->setCellValue("C{$row}", $item->total_approved_letters);
-            $sheet->setCellValue("D{$row}", implode(", ", $combined));
-
-            $row++;
-        }
-
-        foreach (range('A', 'D') as $col) {
-            $sheet->getColumnDimension($col)->setAutoSize(true);
-        }
-
-        $fileName = "laporan_cuti_disetujui.xlsx";
-        $filePath = storage_path("app/public/{$fileName}");
-
-        $writer = new Xlsx($spreadsheet);
-        $writer->save($filePath);
-
-        return response()->download($filePath)->deleteFileAfterSend(true);
-=======
             $allLetters = $lettersQuery
                 ->select(
                     'employees.id as employee_id',
@@ -234,7 +100,6 @@ class IzinDashboardController extends Controller
                 $e->getMessage()
             );
         }
->>>>>>> origin/MiniGroup-1
     }
 
     public function izinList()
@@ -286,46 +151,81 @@ class IzinDashboardController extends Controller
         }
     }
 
+    public function IzinDetail($id)
+    {
+        $letter = DB::table('letters')
+            ->select(
+                'letters.id',
+                'letters.status',
+                'letters.request_date',
+                'letters.effective_start_date',
+                'letters.effective_end_date',
+                'letters.notes',
+                'letter_formats.content as reason',
+                'letter_formats.name as letter_name',
+                DB::raw("CONCAT(employees.first_name, ' ', employees.last_name) AS full_name"),
+                'departments.name as department_name'
+            )
+            ->join('employees', 'letters.employee_id', '=', 'employees.id')
+            ->join('departments', 'employees.department_id', '=', 'departments.id')
+            ->join('letter_formats', 'letters.letter_format_id', '=', 'letter_formats.id')
+            ->where('letters.id', $id)
+            ->first();
+
+        if (!$letter) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data surat tidak ditemukan'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $letter
+        ]);
+    }
+
     public function updateStatus(Request $request, $id)
     {
         try {
             $status = $request->status;
+            $notes = $request->notes;
 
             if (!in_array($status, [0, 1, 2])) {
                 return ResponseWrapper::make(
                     "Status tidak valid",
                     400,
                     false,
-                    null,           // data
-                    null            // errors
+                    null,
+                    null
                 );
             }
 
             DB::table('letters')
                 ->where('id', $id)
                 ->update([
-                    'status' => $status
+                    'status' => $status,
+                    'notes'  => $notes // <--- Simpan NOTES
                 ]);
 
             return ResponseWrapper::make(
-                "Status berhasil diperbarui",
+                "Status & catatan berhasil diperbarui",
                 200,
                 true,
-                null,           // data
-                null            // errors
+                null,
+                null
             );
+
         } catch (\Exception $e) {
             return ResponseWrapper::make(
-                "Gagal memperbarui status",
+                "Gagal memperbarui",
                 500,
                 false,
-                null,                // data
-                $e->getMessage()     // errors
+                null,
+                $e->getMessage()
             );
         }
     }
-
-
 
 
     public function exportApprovedLetters(Request $request)

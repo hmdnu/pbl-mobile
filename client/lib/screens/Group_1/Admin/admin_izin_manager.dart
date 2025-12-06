@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:client/models/izin_manager_model.dart';
 import 'package:client/services/izin_manager_service.dart';
+import 'dart:async';
 
 class AdminIzinManager extends StatefulWidget {
   const AdminIzinManager({super.key});
@@ -64,7 +65,7 @@ class _AdminIzinManagerState extends State<AdminIzinManager> {
   // =================== UPDATE STATUS ===================
   Future<void> updateStatus(int id, int newStatus) async {
     try {
-      final success = await izinService.updateStatus(id, newStatus);
+      final success = await izinService.updateStatus(id, newStatus, "");
 
       if (success) {
         await loadIzinList();
@@ -82,9 +83,9 @@ class _AdminIzinManagerState extends State<AdminIzinManager> {
     } catch (e) {
       debugPrint("ERROR UPDATE STATUS: $e");
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Gagal memperbarui status")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Gagal memperbarui status")));
     }
   }
 
@@ -92,7 +93,9 @@ class _AdminIzinManagerState extends State<AdminIzinManager> {
   Widget build(BuildContext context) {
     final filteredData = selectedFilter == "All"
         ? izinData
-        : izinData.where((item) => item.statusCode.toString() == selectedFilter).toList();
+        : izinData
+              .where((item) => item.statusCode.toString() == selectedFilter)
+              .toList();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -186,10 +189,7 @@ class _AdminIzinManagerState extends State<AdminIzinManager> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const Text(
-                "Surat Izin Diproses",
-                style: TextStyle(fontSize: 12),
-              ),
+              const Text("Surat Izin Diproses", style: TextStyle(fontSize: 12)),
             ],
           ),
         ],
@@ -249,15 +249,19 @@ class _AdminIzinManagerState extends State<AdminIzinManager> {
 
   Widget _buildIzinList(List<IzinModel> data) {
     return Column(
-      children: data.map((item) => izinListItem(
-        id: item.id,
-        statusCode: item.statusCode,
-        status: item.statusText,
-        date: item.date,
-        fullName: item.fullName,
-        position: item.position,
-        department: item.department,
-      )).toList(),
+      children: data
+          .map(
+            (item) => izinListItem(
+              id: item.id,
+              statusCode: item.statusCode,
+              status: item.statusText,
+              date: item.date,
+              fullName: item.fullName,
+              position: item.position,
+              department: item.department,
+            ),
+          )
+          .toList(),
     );
   }
 
@@ -288,8 +292,9 @@ class _AdminIzinManagerState extends State<AdminIzinManager> {
   Widget filterOption(String label, String value) {
     return ListTile(
       title: Text(label),
-      trailing:
-          selectedFilter == value ? const Icon(Icons.check, color: Colors.blue) : null,
+      trailing: selectedFilter == value
+          ? const Icon(Icons.check, color: Colors.blue)
+          : null,
       onTap: () {
         setState(() => selectedFilter = value);
         Navigator.pop(context);
@@ -310,77 +315,98 @@ class _AdminIzinManagerState extends State<AdminIzinManager> {
     final color = status == "Diproses"
         ? Colors.orange
         : status == "Diterima"
-            ? Colors.green
-            : Colors.red;
+        ? Colors.green
+        : Colors.red;
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.15),
-            offset: const Offset(0, 3),
-            blurRadius: 6,
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          const CircleAvatar(
-            radius: 25,
-            backgroundColor: Colors.blue,
-            child: Icon(Icons.person, color: Colors.white),
-          ),
-          const SizedBox(width: 15),
+    return InkWell(
+      onTap: () async {
+        await context.push("/admin/izin/detail/$id");
+        loadIzinList(); // paksa reload saat kembali
+        loadDashboard();
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.15),
+              offset: const Offset(0, 3),
+              blurRadius: 6,
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            const CircleAvatar(
+              radius: 25,
+              backgroundColor: Colors.blue,
+              child: Icon(Icons.person, color: Colors.white),
+            ),
+            const SizedBox(width: 15),
 
-          // INFO
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            // INFO
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    date,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                    ),
+                  ),
+                  Text(
+                    fullName,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    "Jabatan: $position\nDepartemen: $department",
+                    style: const TextStyle(
+                      fontSize: 11,
+                      height: 1.3,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 10),
+
+            // STATUS + ACTION
+            Row(
               children: [
-                Text(date, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                Text(fullName, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-                Text(
-                  "Jabatan: $position\nDepartemen: $department",
-                  style: const TextStyle(fontSize: 11, height: 1.3, color: Colors.black87),
+                Container(
+                  constraints: const BoxConstraints(minWidth: 80),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: color.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: color),
+                  ),
+                  child: Text(
+                    status,
+                    style: TextStyle(
+                      color: color,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
+                const SizedBox(width: 45),
               ],
             ),
-          ),
-          const SizedBox(width: 10),
-
-          // STATUS + ACTION
-          Row(
-            children: [
-              Container(
-                constraints: const BoxConstraints(minWidth: 80),
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.12),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: color),
-                ),
-                child: Text(
-                  status,
-                  style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.bold),
-                ),
-              ),
-              statusCode == 0
-                  ? PopupMenuButton<int>(
-                      onSelected: (value) => updateStatus(id, value),
-                      icon: const Icon(Icons.more_vert),
-                      itemBuilder: (_) => const [
-                        PopupMenuItem(value: 1, child: Text("Diterima")),
-                        PopupMenuItem(value: 2, child: Text("Ditolak")),
-                      ],
-                    )
-                  : const SizedBox(width: 45),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

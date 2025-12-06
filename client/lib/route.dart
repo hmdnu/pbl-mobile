@@ -21,6 +21,7 @@ import 'package:client/screens/Group_1/Admin/list_template_screen.dart';
 import 'package:client/screens/Group_1/Admin/edit_template_screen.dart';
 import 'package:client/screens/Group_1/Admin/izin_laporan_menu.dart';
 import 'package:client/screens/Group_1/Admin/admin_izin_manager.dart';
+import 'package:client/screens/Group_1/Admin/IzinDetailPage.dart';
 
 final storage = FlutterSecureStorage();
 
@@ -128,6 +129,14 @@ final GoRouter router = GoRouter(
       builder: (context, state) => const AdminIzinManager(),
     ),
 
+    GoRoute(
+      path: '/admin/izin/detail/:id',
+      builder: (context, state) {
+        final id = int.parse(state.pathParameters['id']!);
+        return AdminIzinDetailPage(id: id);
+      },
+    ),
+
     // PLACEHOLDER ROUTES FOR FUTURE SCREENS
     GoRoute(
       path: '/absensi',
@@ -172,11 +181,11 @@ final GoRouter router = GoRouter(
     ),
 
     GoRoute(
-  path: "/admin/template/edit",
-  builder: (context, state) {
-    final data = state.extra as Map;
-    return EditTemplateScreen(template: data);
-  },
-),
+      path: "/admin/template/edit",
+      builder: (context, state) {
+        final data = state.extra as Map;
+        return EditTemplateScreen(template: data);
+      },
+    ),
   ],
 );

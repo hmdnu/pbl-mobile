@@ -20,29 +20,10 @@ class _AdminIzinDashboardState extends State<AdminIzinDashboard> {
     dashboardFuture = LeaveReportService.instance.getDashboard();
   }
 
-<<<<<<< HEAD
-  Future<Map<String, dynamic>> fetchDashboardData() async {
-    final response = await http.get(
-      Uri.parse(
-        'https://collene-eternal-luba.ngrok-free.dev/api/izin-dashboard',
-      ),
-      headers: {
-        'Accept': 'application/json',
-        'ngrok-skip-browser-warning': 'true',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      throw Exception('Failed: ${response.statusCode}');
-    }
-=======
   Future<void> _refresh() async {
     setState(() {
       dashboardFuture = LeaveReportService.instance.getDashboard();
     });
->>>>>>> origin/MiniGroup-1
   }
 
   String _getMonthName(int month) {
@@ -130,7 +111,9 @@ class _AdminIzinDashboardState extends State<AdminIzinDashboard> {
                             const Text(
                               'Laporan Statistik Izin',
                               style: TextStyle(
-                                  color: Colors.white70, fontSize: 18),
+                                color: Colors.white70,
+                                fontSize: 18,
+                              ),
                             ),
                             const SizedBox(height: 8),
                             const Text(
@@ -193,7 +176,9 @@ class _AdminIzinDashboardState extends State<AdminIzinDashboard> {
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 32, vertical: 12),
+                            horizontal: 32,
+                            vertical: 12,
+                          ),
                           decoration: BoxDecoration(
                             color: const Color(0xFF00A8E8),
                             borderRadius: BorderRadius.circular(30),
@@ -221,8 +206,7 @@ class _AdminIzinDashboardState extends State<AdminIzinDashboard> {
                       bottom: MediaQuery.of(context).padding.bottom + 100,
                     ),
                     sliver: SliverGrid(
-                      gridDelegate:
-                          SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         crossAxisSpacing: 16,
                         mainAxisSpacing: 16,
@@ -230,16 +214,13 @@ class _AdminIzinDashboardState extends State<AdminIzinDashboard> {
                             ? 0.85
                             : (screenWidth < 420 ? 0.95 : 1.1),
                       ),
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          final dept = data.departments[index];
-                          return _buildDepartmentCard(
-                            dept["name"],
-                            dept["count"],
-                          );
-                        },
-                        childCount: data.departments.length,
-                      ),
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        final dept = data.departments[index];
+                        return _buildDepartmentCard(
+                          dept["name"],
+                          dept["count"],
+                        );
+                      }, childCount: data.departments.length),
                     ),
                   ),
                 ],
@@ -277,8 +258,11 @@ class _AdminIzinDashboardState extends State<AdminIzinDashboard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon,
-                  size: screenWidth < 380 ? 28 : 36, color: Colors.white),
+              Icon(
+                icon,
+                size: screenWidth < 380 ? 28 : 36,
+                color: Colors.white,
+              ),
               SizedBox(width: screenWidth < 380 ? 8 : 12),
               Text(
                 value,
@@ -331,8 +315,7 @@ class _AdminIzinDashboardState extends State<AdminIzinDashboard> {
           CircleAvatar(
             radius: 28,
             backgroundColor: Colors.white,
-            child: Icon(Icons.person,
-                size: 32, color: const Color(0xFF00A8E8)),
+            child: Icon(Icons.person, size: 32, color: const Color(0xFF00A8E8)),
           ),
           const SizedBox(height: 12),
           Text(

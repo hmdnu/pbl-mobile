@@ -25,11 +25,20 @@ class IzinService {
     return raw.map((item) => IzinModel.fromJson(item)).toList();
   }
 
+  // ---------------- IZIN DETAIL ----------------
+  Future<IzinModel?> loadIzinDetail(int id) async {
+    final res = await _dio.get("${Constant.apiUrl}/izin-detail/$id");
+
+    if (res.data["data"] == null) return null;
+
+    return IzinModel.fromJson(res.data["data"]);
+  }
+
   // ---------------- UPDATE STATUS ----------------
-  Future<bool> updateStatus(int id, int newStatus) async {
+  Future<bool> updateStatus(int id, int newStatus, String notes) async {
     final res = await _dio.post(
       "${Constant.apiUrl}/izin-update/$id",
-      data: {"status": newStatus},
+      data: {"status": newStatus, "notes": notes},
     );
 
     return res.data["success"] == true;

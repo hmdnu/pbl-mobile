@@ -2,10 +2,20 @@ class IzinModel {
   final int id;
   final int statusCode;
   final String statusText;
+
+  // LIST DATA
   final String date;
   final String fullName;
   final String position;
   final String department;
+
+  // DETAIL DATA
+  final String requestDate;
+  final String startDate;
+  final String endDate;
+  final String reason;
+  final String letterName;
+  final String notes;
 
   IzinModel({
     required this.id,
@@ -15,6 +25,12 @@ class IzinModel {
     required this.fullName,
     required this.position,
     required this.department,
+    required this.requestDate,
+    required this.startDate,
+    required this.endDate,
+    required this.reason,
+    required this.letterName,
+    required this.notes,
   });
 
   factory IzinModel.fromJson(Map<String, dynamic> json) {
@@ -38,10 +54,20 @@ class IzinModel {
       id: json["id"] ?? 0,
       statusCode: rawStatus ?? -1,
       statusText: statusText,
-      date: json["date"]?.toString() ?? "",
+
+      // LIST
+      date: json["request_date"]?.toString() ?? json["date"]?.toString() ?? "",
       fullName: json["full_name"]?.toString() ?? "",
       position: json["position"]?.toString() ?? "",
       department: json["department_name"]?.toString() ?? "",
+
+      // DETAIL DATA
+      requestDate: json["request_date"]?.toString() ?? "",
+      startDate: json["effective_start_date"]?.toString() ?? "",
+      endDate: json["effective_end_date"]?.toString() ?? "",
+      reason: json["reason"]?.toString() ?? "",
+      letterName: json["letter_name"]?.toString() ?? "",
+      notes: json["notes"]?.toString() ?? "",
     );
   }
 }
