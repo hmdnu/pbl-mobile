@@ -135,7 +135,7 @@ class EmployeeScreen extends StatelessWidget {
                       Expanded(
                         child: ListView.separated(
                           itemCount: employees.length,
-                          separatorBuilder: (_, __) =>
+                          separatorBuilder: (_, _) =>
                               const SizedBox(height: 12),
                           itemBuilder: (context, index) {
                             final user = employees[index];
