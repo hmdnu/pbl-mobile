@@ -30,24 +30,27 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  
   # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
+  # Use with the CupertinoIcons class for iOS style icons.  
+  syncfusion_flutter_xlsio: 29.2.11
   cupertino_icons: ^1.0.8
   go_router: ^17.0.0
   google_fonts: ^6.3.2
+  path_provider: ^2.1.2
+  open_filex: ^4.3.2
+  intl: 0.20.2
   dio: ^5.9.0
   logging: ^1.3.0
   flutter_secure_storage: ^9.2.4
   flutter_form_builder: ^10.2.0
   form_builder_validators: ^11.2.0
   image_picker: ^1.0.7
-  path_provider: ^2.1.1
   flutter_map: ^8.2.2
   latlong2: ^0.9.1  
   geolocator: ^14.0.2  
   url_launcher: ^6.2.0
-  intl: ^0.20.2
+
   provider: ^6.1.2
   flutter_dotenv: ^5.0.2
   table_calendar: ^3.2.0
@@ -58,7 +61,7 @@ dependencies:
   # ✅ Excel export packages
   excel: ^4.0.6
   permission_handler: ^11.0.1
-  open_filex: ^4.3.4
+
   
 dev_dependencies:
   flutter_test:
