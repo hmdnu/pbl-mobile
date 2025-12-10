@@ -20,6 +20,7 @@ Route::get("/positions", [PositionController::class, "show_positions"])->middlew
 Route::get("/position/{userId}", [PositionController::class, "show_position"])->middleware("auth:sanctum");
 
 Route::post("/login", [AuthController::class, "login"]);
+Route::post("/logout", [AuthController::class, "logout"])->middleware("auth:sanctum");
 Route::post("/register", [AuthController::class, "register"])->middleware(
     "auth:sanctum",
 );

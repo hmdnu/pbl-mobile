@@ -35,141 +35,160 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
-}
 
-String parseGender(String gender) {
-  if (gender == "P") {
-    return "Perempuan";
+  String parseGender(String gender) {
+    if (gender == "P") {
+      return "Perempuan";
+    }
+    if (gender == "L") {
+      return "Laki-Laki";
+    }
+    return "";
   }
-  if (gender == "L") {
-    return "Laki-Laki";
+
+  Future<void> handleLogout(BuildContext context) async {
+    final response = await AuthService.instance.logout();
+
+    if (!context.mounted) {
+      return;
+    }
+
+    if (!response.success) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(response.message)));
+      return;
+    }
+
+    context.go("/login");
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(response.message)));
   }
-  return "";
-}
 
-Widget profileSection(BuildContext context, UserModel<EmployeeModel>? user) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Container(
-        width: double.infinity,
-        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-        decoration: const BoxDecoration(color: Color(0xFF22A9D6)),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(
-                  "Data diri pegawai",
-                  style: TextStyle(fontSize: 15, color: Colors.white70),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-
-      // ========== CONTAINER PUTIH ==========
-      Container(
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30),
-            topRight: Radius.circular(30),
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-
-          child: Column(
+  Widget profileSection(BuildContext context, UserModel<EmployeeModel>? user) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          decoration: const BoxDecoration(color: Color(0xFF22A9D6)),
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _ProfileField(
-                title: "Nama Awal",
-                value: user?.employee?.firstName ?? "",
-              ),
-              _ProfileField(
-                title: "Nama Akhir",
-                value: user?.employee?.lastName ?? "",
-              ),
-              _ProfileField(title: "Email", value: user?.email ?? ""),
-              _ProfileField(
-                title: "Jenis Kelamin",
-                value: parseGender(user?.employee?.gender ?? ""),
-              ),
-              _ProfileField(
-                title: "Alamat",
-                value: user?.employee?.address ?? "",
-              ),
-              _ProfileField(
-                title: "Jabatan",
-                value: user?.employee?.position ?? "",
-              ),
-              _ProfileField(
-                title: "Departemen",
-                value: user?.employee?.department ?? "",
-              ),
-
-              _ProfileField(
-                title: "Jatah Cuti",
-                value: "4",
-                color: const Color(0x66D79A20),
-              ),
-
-              const SizedBox(height: 20),
-
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: () {
-                    context.push("/payroll");
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF4CB050),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    "Data diri pegawai",
+                    style: TextStyle(fontSize: 15, color: Colors.white70),
                   ),
-                  child: const Text(
-                    "Informasi Gaji",
-                    style: TextStyle(fontSize: 16, color: Colors.white),
-                  ),
-                ),
+                ],
               ),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    await AuthService.instance.logout(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                  ),
-                  child: const Text(
-                    "Logout",
-                    style: TextStyle(fontSize: 16, color: Colors.white),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
             ],
           ),
         ),
-      ),
-    ],
-  );
+
+        // ========== CONTAINER PUTIH ==========
+        Container(
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _ProfileField(
+                  title: "Nama Awal",
+                  value: user?.employee?.firstName ?? "",
+                ),
+                _ProfileField(
+                  title: "Nama Akhir",
+                  value: user?.employee?.lastName ?? "",
+                ),
+                _ProfileField(title: "Email", value: user?.email ?? ""),
+                _ProfileField(
+                  title: "Jenis Kelamin",
+                  value: parseGender(user?.employee?.gender ?? ""),
+                ),
+                _ProfileField(
+                  title: "Alamat",
+                  value: user?.employee?.address ?? "",
+                ),
+                _ProfileField(
+                  title: "Jabatan",
+                  value: user?.employee?.position ?? "",
+                ),
+                _ProfileField(
+                  title: "Departemen",
+                  value: user?.employee?.department ?? "",
+                ),
+
+                _ProfileField(
+                  title: "Jatah Cuti",
+                  value: "4",
+                  color: const Color(0x66D79A20),
+                ),
+
+                const SizedBox(height: 20),
+
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      context.push("/payroll");
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF4CB050),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                    child: const Text(
+                      "Informasi Gaji",
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      await handleLogout(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                    child: const Text(
+                      "Logout",
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }
 
-// ========== FIELD UI KOTAK SEPERTI GAMBAR ==========
 class _ProfileField extends StatelessWidget {
   final String title;
   final String value;

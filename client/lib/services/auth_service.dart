@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:client/services/base_service.dart';
+import 'package:client/utils/api_wrapper.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -59,10 +60,17 @@ class AuthService extends BaseService {
     return null;
   }
 
-  Future<void> logout(BuildContext context) async {
-    final storage = FlutterSecureStorage();
+  Future<ApiResponse> logout() async {
+    final response = await dio.post(
+      "/logout",
+      options: Options(validateStatus: (_) => true),
+    );
+    if (response.statusCode != 200) {
+      log("Error: Logout", error: response.data["message"]);
+      return ApiResponse(message: response.data["message"], success: false);
+    }
+
     await storage.deleteAll();
-    if (!context.mounted) return;
-    context.go("/login");
+    return ApiResponse(message: response.data["message"], success: true);
   }
 }

@@ -89,4 +89,27 @@ class AuthController extends Controller
             );
         }
     }
+
+    public function logout(Request $request)
+    {
+        try {
+            $request->user()->currentAccessToken()->delete();
+
+            return ResponseWrapper::make(
+                "Logout Sukses",
+                200,
+                true,
+                null,
+                null,
+            );
+        } catch (\Error $err) {
+            return ResponseWrapper::make(
+                "Logout Gagal",
+                500,
+                true,
+                null,
+                $err->getMessage(),
+            );
+        }
+    }
 }
